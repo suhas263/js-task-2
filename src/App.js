@@ -4,18 +4,24 @@ import { React } from 'react';
 import { useState } from 'react';
 import topicsJson from './topics.json';
 import DetailCard from './components/DetailCard';
-import PopUp from './components/PopUp';
+import InfoBox from './components/InfoBox';
+import Header from './Header';
 
 function App() {
 	const [topics, setTopics] = useState(topicsJson.topics);
 	const [currWord, setCurrWord] = useState({});
-	const [isOpen, setIsOpen] = useState(false);
+	const [infoBoxState, setInfoBoxState] = useState(false);
 
 	const togglePopup = () => {
-		setIsOpen(!isOpen);
+		setInfoBoxState(!infoBoxState);
 	};
 
 	const onWordClick = (word) => {
+		// console.log(`currWord: ${JSON.stringify(currWord)}`);
+		// console.log(`word: ${JSON.stringify(word)}`);
+		if (word === currWord) {
+			return;
+		}
 		setCurrWord(word);
 		togglePopup();
 	};
@@ -62,11 +68,13 @@ function App() {
 	});
 	// console.log(words);
 
+	// ReactWordCloud callbacks
 	const callbacks = {
 		getWordColor: (word) => topicColorConfigurator(word.sentimentScore),
 		onWordClick: (word) => onWordClick(word),
 	};
 
+	// ReactWordCloud config
 	const options = {
 		rotations: 2,
 		rotationAngles: [0],
@@ -75,24 +83,29 @@ function App() {
 		fontWeight: 'normal',
 		fontFamily: 'arial',
 		padding: 0.5,
-		deterministic: false,
+		deterministic: true,
 		enableTooltip: false,
-		// scale: 'sqrt',
-    spiral: 'archimedean',
+		spiral: 'archimedean',
 	};
 
 	return (
 		<div className='App'>
-			<div className='topic-cloud'>
-				<h1> My Topic Cloud </h1>
-				<ReactWordCloud callbacks={callbacks} words={words} options={options} />
+			<Header />
+			<div className='word-cloud-container'>
+				<div className='word-cloud'>
+					<ReactWordCloud
+						callbacks={callbacks}
+						words={words}
+						options={options}
+					/>
+				</div>
+				{infoBoxState && (
+					<InfoBox
+						content={<DetailCard word={currWord} />}
+						handleClose={togglePopup}
+					/>
+				)}
 			</div>
-			{isOpen && (
-				<PopUp
-					content={<DetailCard word={currWord} />}
-					handleClose={togglePopup}
-				/>
-			)}
 		</div>
 	);
 }

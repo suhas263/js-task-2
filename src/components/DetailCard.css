@@ -1,0 +1,31 @@
+.detail-card {
+    /* background-color: lightgray; */
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.detail-card-header {
+    /* background-color: orange; */
+    text-align: center;
+    font-size: 25px;
+    font-weight: 500;
+    margin: 10px;
+}
+
+.detail-volume {
+    /* background-color: gray; */
+    width: 50%;
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+li {
+    list-style: none;
+}
+
+.score {
+	font-size: 5mm;
+	padding-top: 5px;
+    padding-bottom: 5px;
+}

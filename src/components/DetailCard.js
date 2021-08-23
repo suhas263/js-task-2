@@ -1,3 +1,5 @@
+import './DetailCard.css';
+
 const DetailCard = ({ word }) => {
 	const {
 		id,
@@ -11,38 +13,22 @@ const DetailCard = ({ word }) => {
 	} = word;
 
 	// console.log(Object.keys(word));
-    console.log(word);
+	console.log(word);
 
 	return (
-		<div>
+		<>
 			{Object.keys(word).length === 0 ? null : (
 				<div className='detail-card'>
-					<h2>Detailed info on the topic "{text}"</h2>
-					<div className='detail-volume'>
-						<p>
-							Total mentions:
-							<span className='volume-score score'>{volume}</span>
-						</p>
-					</div>
-					<div className='detail-sentiment'>
-						<ul className='sentiment-card'>
-							<li>
-								Positive mentions:
-								<span className='positive-score score'>{positiveSentiment}</span>
-							</li>
-							<li>
-								Negative mentions:
-								<span className='negative-score score'>{negativeSentiment}</span>
-							</li>
-							<li>
-								Neutral mentions:
-								<span className='neutral-score score'>{neutralSentiment}</span>
-							</li>
-						</ul>
-					</div>
+					<div className='detail-card-header'>Detailed info on "{text}"</div>
+					<ul className='detail-volume'>
+							<li className='score'>Total mentions: {volume}</li>
+							<li className='score'>Positive mentions: {positiveSentiment}</li>
+							<li className='score'>Negative mentions: {negativeSentiment}</li>
+							<li className='score'>Neutral mentions: {neutralSentiment}</li>
+					</ul>
 				</div>
 			)}
-		</div>
+		</>
 	);
 };
 
