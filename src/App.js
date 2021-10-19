@@ -1,14 +1,13 @@
 import './App.css';
 import ReactWordCloud from 'react-wordcloud';
-import { React } from 'react';
-import { useState } from 'react';
+import { React, useState, useMemo } from 'react';
 import topicsJson from './topics.json';
 import DetailCard from './components/DetailCard';
 import InfoBox from './components/InfoBox';
-import Header from './Header';
+import Header from './components/Header';
 
 function App() {
-	const [topics, setTopics] = useState(topicsJson.topics);
+	const [topics] = useState(topicsJson.topics);
 	const [currWord, setCurrWord] = useState({});
 	const [infoBoxState, setInfoBoxState] = useState(false);
 
@@ -17,10 +16,8 @@ function App() {
 	};
 
 	const onWordClick = (word) => {
-		// console.log(`currWord: ${JSON.stringify(currWord)}`);
-		// console.log(`word: ${JSON.stringify(word)}`);
-		if (word === currWord) {
-			return;
+		if(currWord === word){
+			setInfoBoxState(false);
 		}
 		setCurrWord(word);
 		togglePopup();
@@ -66,7 +63,6 @@ function App() {
 			neutralSentiment: setSentimentScore(topic.sentiment.neutral),
 		};
 	});
-	// console.log(words);
 
 	// ReactWordCloud callbacks
 	const callbacks = {
@@ -100,10 +96,9 @@ function App() {
 					/>
 				</div>
 				{infoBoxState && (
-					<InfoBox
-						content={<DetailCard word={currWord} />}
-						handleClose={togglePopup}
-					/>
+					<InfoBox handleClose={togglePopup}>
+						<DetailCard word={currWord}/>
+					</InfoBox>
 				)}
 			</div>
 		</div>

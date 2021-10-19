@@ -2,17 +2,13 @@ import './DetailCard.css';
 
 const DetailCard = ({ word }) => {
 	const {
-		id,
 		text,
-		value,
 		volume,
-		sentimentScore,
 		negativeSentiment,
 		positiveSentiment,
 		neutralSentiment,
 	} = word;
 
-	// console.log(Object.keys(word));
 	console.log(word);
 
 	return (
