@@ -1,23 +1,39 @@
 import './App.css';
 import ReactWordCloud from 'react-wordcloud';
 import { React, useState, useEffect } from 'react';
-import topicsJson from './topics.json';
 import DetailCard from './components/DetailCard';
 import Header from './components/Header';
-import axios from 'axios';
+import InfoBox from './components/InfoBox';
 
 function App() {
-	const [topics] = useState(topicsJson.topics);
+	const [topics, setTopics] = useState({});
 	const [currWord, setCurrWord] = useState({});
 
-	useEffect(() => {}, []);
+	const getData = () => {
+		fetch('data.json', {
+			headers: {
+				'Content-Type': 'application/json',
+				Accept: 'application/json',
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((myjson) => {
+				setTopics(myjson.topics);
+			});
+	};
+
+	useEffect(() => {
+		getData();
+	}, []);
 
 	const onWordClick = (word) => {
 		setCurrWord(word);
 	};
 
-	const words = topics.map((topic) => {
-		return { 
+	const words = (topics && topics.length > 0) && topics.map((topic) => {
+		return {
 			id: topic.id,
 			text: topic.label,
 			value: wordSizeCalculator(topic.volume),
@@ -52,16 +68,17 @@ function App() {
 	return (
 		<div className='App'>
 			<Header />
-			<div className='word-cloud-container'>
+			{(topics && topics.length > 0) ?
+			(<div className='word-cloud-container'>
 				<div className='word-cloud'>
 					<ReactWordCloud
 						callbacks={callbacks}
 						words={words}
-						options={options}
-					/>
+						options={options} />
 				</div>
-				<DetailCard word={currWord} color={callbacks.getWordColor(currWord)}/>
+				<DetailCard word={currWord} color={callbacks.getWordColor(currWord)} />
 			</div>
+			) : <InfoBox /> }
 		</div>
 	);
 }
