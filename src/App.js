@@ -32,18 +32,21 @@ function App() {
 		setCurrWord(word);
 	};
 
-	const words = (topics && topics.length > 0) && topics.map((topic) => {
-		return {
-			id: topic.id,
-			text: topic.label,
-			value: wordSizeCalculator(topic.volume),
-			volume: topic.volume,
-			sentimentScore: topic.sentimentScore,
-			negativeSentiment: setSentimentScore(topic.sentiment.negative),
-			positiveSentiment: setSentimentScore(topic.sentiment.positive),
-			neutralSentiment: setSentimentScore(topic.sentiment.neutral),
-		};
-	});
+	const words =
+		topics &&
+		topics.length > 0 &&
+		topics.map((topic) => {
+			return {
+				id: topic.id,
+				text: topic.label,
+				value: wordSizeCalculator(topic.volume),
+				volume: topic.volume,
+				sentimentScore: topic.sentimentScore,
+				negativeSentiment: setSentimentScore(topic.sentiment.negative),
+				positiveSentiment: setSentimentScore(topic.sentiment.positive),
+				neutralSentiment: setSentimentScore(topic.sentiment.neutral),
+			};
+		});
 
 	// ReactWordCloud callbacks
 	const callbacks = {
@@ -68,17 +71,23 @@ function App() {
 	return (
 		<div className='App'>
 			<Header />
-			{(topics && topics.length > 0) ?
-			(<div className='word-cloud-container'>
-				<div className='word-cloud'>
-					<ReactWordCloud
-						callbacks={callbacks}
-						words={words}
-						options={options} />
+			{topics && topics.length > 0 ? (
+				<div className='word-cloud-container'>
+					<div className='word-cloud'>
+						<ReactWordCloud
+							callbacks={callbacks}
+							words={words}
+							options={options}
+						/>
+					</div>
+					<DetailCard
+						word={currWord}
+						color={callbacks.getWordColor(currWord)}
+					/>
 				</div>
-				<DetailCard word={currWord} color={callbacks.getWordColor(currWord)} />
-			</div>
-			) : <InfoBox /> }
+			) : (
+				<InfoBox />
+			)}
 		</div>
 	);
 }
