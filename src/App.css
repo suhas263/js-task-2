@@ -9,13 +9,13 @@
 }
 
 .word-cloud {
-  /* background-color: red; */
   width: 75%;
   height: 100%;
+  margin: auto;
 }
 
-.info-box {
-  /* background-color: orange; */
+.detail-card  {
   width: 25%;
   height: 100%;
+  border-left: 2px dotted gray;
 }

@@ -1,58 +1,23 @@
 import './App.css';
 import ReactWordCloud from 'react-wordcloud';
-import { React, useState, useMemo } from 'react';
+import { React, useState, useEffect } from 'react';
 import topicsJson from './topics.json';
 import DetailCard from './components/DetailCard';
-import InfoBox from './components/InfoBox';
 import Header from './components/Header';
+import axios from 'axios';
 
 function App() {
 	const [topics] = useState(topicsJson.topics);
 	const [currWord, setCurrWord] = useState({});
-	const [infoBoxState, setInfoBoxState] = useState(false);
 
-	const togglePopup = () => {
-		setInfoBoxState(!infoBoxState);
-	};
+	useEffect(() => {}, []);
 
 	const onWordClick = (word) => {
-		if(currWord === word){
-			setInfoBoxState(false);
-		}
 		setCurrWord(word);
-		togglePopup();
-	};
-
-	const wordSizeCalculator = (size) => {
-		if (size > 0 && size <= 20) {
-			return 20;
-		} else if (size > 20 && size <= 40) {
-			return 40;
-		} else if (size > 40 && size <= 60) {
-			return 60;
-		} else if (size > 60 && size <= 100) {
-			return 80;
-		} else if (size > 100) {
-			return 100;
-		}
-	};
-
-	const topicColorConfigurator = (score) => {
-		if (score > 60) {
-			return 'green';
-		} else if (score < 40) {
-			return 'red';
-		} else {
-			return 'grey';
-		}
-	};
-
-	const setSentimentScore = (score) => {
-		return score ? score : 0;
 	};
 
 	const words = topics.map((topic) => {
-		return {
+		return { 
 			id: topic.id,
 			text: topic.label,
 			value: wordSizeCalculator(topic.volume),
@@ -78,7 +43,7 @@ function App() {
 		fontStyle: 'normal',
 		fontWeight: 'normal',
 		fontFamily: 'arial',
-		padding: 0.5,
+		padding: 3.5,
 		deterministic: true,
 		enableTooltip: false,
 		spiral: 'archimedean',
@@ -95,14 +60,39 @@ function App() {
 						options={options}
 					/>
 				</div>
-				{infoBoxState && (
-					<InfoBox handleClose={togglePopup}>
-						<DetailCard word={currWord}/>
-					</InfoBox>
-				)}
+				<DetailCard word={currWord} color={callbacks.getWordColor(currWord)}/>
 			</div>
 		</div>
 	);
 }
 
 export default App;
+
+// topic cloud configs
+const wordSizeCalculator = (size) => {
+	if (size > 0 && size <= 20) {
+		return 20;
+	} else if (size > 20 && size <= 40) {
+		return 40;
+	} else if (size > 40 && size <= 60) {
+		return 60;
+	} else if (size > 60 && size <= 100) {
+		return 80;
+	} else if (size > 100) {
+		return 100;
+	}
+};
+
+const topicColorConfigurator = (score) => {
+	if (score > 60) {
+		return 'green';
+	} else if (score < 40) {
+		return 'red';
+	} else {
+		return 'grey';
+	}
+};
+
+const setSentimentScore = (score) => {
+	return score ? score : 0;
+};
