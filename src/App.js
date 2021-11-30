@@ -6,21 +6,26 @@ import Header from './components/Header';
 import InfoBox from './components/InfoBox';
 
 function App() {
-	const [topics, setTopics] = useState({});
+	const [topics, setTopics] = useState([]);
 	const [currWord, setCurrWord] = useState({});
+	const [hasError, setHasError] = useState(false);
 
 	const getData = () => {
-		fetch('data.json', {
-			headers: {
-				'Content-Type': 'application/json',
-				Accept: 'application/json',
-			},
-		})
+		fetch('data.json')
 			.then((res) => {
-				return res.json();
+				if(res.status >= 200 && res.status < 400) {
+					return res.json();
+				}
+				throw new Error('Request failed');
 			})
 			.then((myjson) => {
-				setTopics(myjson.topics);
+				// setTopics(myjson.topics);
+				// will set the word cloud to an empty array
+				setTopics([]);
+			})
+			.catch((err) => {
+				setHasError(true);
+				console.log(err);
 			});
 	};
 
@@ -34,7 +39,6 @@ function App() {
 
 	const words =
 		topics &&
-		topics.length > 0 &&
 		topics.map((topic) => {
 			return {
 				id: topic.id,
@@ -71,7 +75,7 @@ function App() {
 	return (
 		<div className='App'>
 			<Header />
-			{topics && topics.length > 0 ? (
+			{!hasError ? (
 				<div className='word-cloud-container'>
 					<div className='word-cloud'>
 						<ReactWordCloud
