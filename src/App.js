@@ -3,25 +3,29 @@ import ReactWordCloud from 'react-wordcloud';
 import { React, useState, useEffect } from 'react';
 import DetailCard from './components/DetailCard';
 import Header from './components/Header';
-import InfoBox from './components/InfoBox';
+import ErrorState from './components/states/ErrorState';
+import LoadingState from './components/states/LoadingState';
 
 function App() {
 	const [topics, setTopics] = useState([]);
 	const [currWord, setCurrWord] = useState({});
 	const [hasError, setHasError] = useState(false);
+	const [dataHasLoaded, setDataHasLoaded] = useState(false);
 
 	const getData = () => {
 		fetch('data.json')
 			.then((res) => {
-				if(res.status >= 200 && res.status < 400) {
+				if (res.status >= 200 && res.status < 400) {
+					setDataHasLoaded(true);
 					return res.json();
+				} else {
+					throw new Error('request failed');
 				}
-				throw new Error('Request failed');
 			})
 			.then((myjson) => {
-				// setTopics(myjson.topics);
+				setTopics(myjson.topics);
 				// will set the word cloud to an empty array
-				setTopics([]);
+				// setTopics([]);
 			})
 			.catch((err) => {
 				setHasError(true);
@@ -30,7 +34,13 @@ function App() {
 	};
 
 	useEffect(() => {
-		getData();
+		const loadingData = setTimeout(() => {
+			getData();
+		}, 2000);
+
+		return (() => {
+			clearInterval(loadingData);
+		});
 	}, []);
 
 	const onWordClick = (word) => {
@@ -72,26 +82,23 @@ function App() {
 		spiral: 'archimedean',
 	};
 
+	const wordCloudContainer = (
+		<div className='word-cloud-container'>
+			<div className='word-cloud'>
+				<ReactWordCloud callbacks={callbacks} words={words} options={options} />
+			</div>
+			<DetailCard word={currWord} color={callbacks.getWordColor(currWord)} />
+		</div>
+	);
+
+	const containerContent = !hasError ? wordCloudContainer : <ErrorState />;
+
 	return (
 		<div className='App'>
 			<Header />
-			{!hasError ? (
-				<div className='word-cloud-container'>
-					<div className='word-cloud'>
-						<ReactWordCloud
-							callbacks={callbacks}
-							words={words}
-							options={options}
-						/>
-					</div>
-					<DetailCard
-						word={currWord}
-						color={callbacks.getWordColor(currWord)}
-					/>
-				</div>
-			) : (
-				<InfoBox />
-			)}
+			<div className='container'>
+				{!dataHasLoaded ? <LoadingState /> : containerContent}
+			</div>
 		</div>
 	);
 }
