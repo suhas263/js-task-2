@@ -1,0 +1,9 @@
+.no-results {
+    margin-top: 150px;
+	display: block;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-size: 25px;
+	font-weight: 400;
+}

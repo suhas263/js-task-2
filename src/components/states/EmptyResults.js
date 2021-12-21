@@ -1,11 +1,12 @@
-import React from 'react'
+import React from 'react';
+import './EmptyResults.css';
 
-const EmptyResults = () => {
-    return (
-        <div>
-            <p>No results found</p>
-        </div>
-    )
+const EmptyResults = (props) => {
+    return <div className='no-results'>{props.message}</div>;
 }
 
 export default EmptyResults
+
+EmptyResults.defaultProps = {
+	message: 'No results for this data set',
+};

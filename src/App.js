@@ -5,6 +5,7 @@ import DetailCard from './components/DetailCard';
 import Header from './components/Header';
 import ErrorState from './components/states/ErrorState';
 import LoadingState from './components/states/LoadingState';
+import EmptyResults from './components/states/EmptyResults';
 
 function App() {
 	const [topics, setTopics] = useState([]);
@@ -23,9 +24,9 @@ function App() {
 				}
 			})
 			.then((myjson) => {
-				setTopics(myjson.topics);
+				// setTopics(myjson.topics);
 				// will set the word cloud to an empty array
-				// setTopics([]);
+				setTopics([]);
 			})
 			.catch((err) => {
 				setHasError(true);
@@ -38,9 +39,9 @@ function App() {
 			getData();
 		}, 2000);
 
-		return (() => {
+		return () => {
 			clearInterval(loadingData);
-		});
+		};
 	}, []);
 
 	const onWordClick = (word) => {
@@ -83,12 +84,25 @@ function App() {
 	};
 
 	const wordCloudContainer = (
-		<div className='word-cloud-container'>
-			<div className='word-cloud'>
-				<ReactWordCloud callbacks={callbacks} words={words} options={options} />
-			</div>
-			<DetailCard word={currWord} color={callbacks.getWordColor(currWord)} />
-		</div>
+		<>
+			{words.length > 0 ? (
+				<div className='word-cloud-container'>
+					<div className='word-cloud'>
+						<ReactWordCloud
+							callbacks={callbacks}
+							words={words}
+							options={options}
+						/>
+					</div>
+					<DetailCard
+						word={currWord}
+						color={callbacks.getWordColor(currWord)}
+					/>
+				</div>
+			) : (
+				<EmptyResults />
+			)}
+		</>
 	);
 
 	const containerContent = !hasError ? wordCloudContainer : <ErrorState />;
