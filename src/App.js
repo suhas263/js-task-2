@@ -14,19 +14,20 @@ function App() {
 	const [dataHasLoaded, setDataHasLoaded] = useState(false);
 
 	const getData = () => {
-		fetch('data.json')
-			.then((res) => {
+		fetch('sddata.json')
+			.then(async (res) => {
 				if (res.status >= 200 && res.status < 400) {
 					setDataHasLoaded(true);
 					return res.json();
 				} else {
-					throw new Error('request failed');
+					const errorResponse = await res.json();
+					throw new Error(errorResponse);
 				}
 			})
 			.then((myjson) => {
-				// setTopics(myjson.topics);
+				setTopics(myjson.topics);
 				// will set the word cloud to an empty array
-				setTopics([]);
+				// setTopics([]);
 			})
 			.catch((err) => {
 				setHasError(true);
